@@ -4,6 +4,7 @@
       <ul>
         <li v-for="(tab, index) in tabs" :key="index">
           <div
+            id="item"
             class="nav-item"
             :class="[
               { 'is-active': tab.isActive },
