@@ -1,10 +1,9 @@
 <template>
   <article>
-    <header class="tabs">
+    <header class="tabs" data-cy="tabs-list">
       <ul>
         <li v-for="(tab, index) in tabs" :key="index">
           <div
-            id="item"
             class="nav-item"
             :class="[
               { 'is-active': tab.isActive },
@@ -17,7 +16,7 @@
         </li>
       </ul>
     </header>
-    <section class="tabs-details">
+    <section class="tabs-details" data-cy="tab-content">
       <slot></slot>
     </section>
   </article>
