@@ -19,6 +19,14 @@ npm run build
 ```
 npm run lint
 ```
+### Run vue unit tests
+```
+npm run test:unit
+```
 
+### Run e2e test (cypress)
+```
+npm run test:e2e
+```
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
