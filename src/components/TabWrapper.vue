@@ -7,8 +7,13 @@
         :disable="disableEmployerTab"
       >
         <h2>Enter Maximum offer</h2>
-        <InputComp inputName="Maximum offer" v-model="employerOffer" />
+        <InputComp
+          id="offerEmployer"
+          inputName="Maximum offer"
+          v-model="employerOffer"
+        />
         <ButtonComp
+          id="submitOffer"
           buttonName="Submit offer"
           @buttonEvent="closeEmployerPanel()"
         />
@@ -19,9 +24,18 @@
       </Tab>
       <Tab name="employee tab" :selected="disableEmployerTab">
         <h2>Enter Maximum salary</h2>
-        <InputComp inputName="Salary expectation" v-model="employeeSalary" />
-        <ButtonComp buttonName="Submit salary" @buttonEvent="openModal" />
+        <InputComp
+          id="employeeSalary"
+          inputName="Salary expectation"
+          v-model="employeeSalary"
+        />
+        <ButtonComp
+          id="submitSalary"
+          buttonName="Submit salary"
+          @buttonEvent="openModal"
+        />
         <Modal
+          id="modal"
           v-if="!employeeNotification"
           :success="validOffer"
           :show="showModal"

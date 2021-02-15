@@ -33,11 +33,13 @@ export default {
   methods: {
     selectTab(selectedTab) {
       this.tabs.forEach((tab) => {
+        console.log(tab.name === selectedTab.name);
         tab.isActive = tab.name === selectedTab.name;
       });
     },
   },
   created() {
+    console.log(this.$children);
     this.tabs = this.$children;
   },
 };

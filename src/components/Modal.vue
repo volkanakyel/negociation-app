@@ -1,13 +1,13 @@
 <template>
-  <div class="modal" v-show="show" transition="modal">
+  <div class="modal" v-show="show">
     <div class="modal-wrapper">
       <div class="modal-container">
         <content select=".modal-header">
           <div class="modal-header">
-            <h3 :class="{ win: success, loose: !success }">
+            <h2 :class="{ win: success, loose: !success }">
               {{ isSuccess }}
-            </h3>
-            <h3>{{ forecastDetails.name }} :</h3>
+            </h2>
+            <h3>{{ getForecast }}</h3>
           </div>
         </content>
         <div class="modal-body">
@@ -46,11 +46,19 @@ export default {
     return {
       modalMessage: "Success !",
       forecastDetails: [],
+      spinLoader: false,
     };
   },
   computed: {
     isSuccess() {
       return this.success ? "Success !" : "Wrong";
+    },
+    getForecast() {
+      if (this.forecastDetails.weather) {
+        return `${this.forecastDetails.name} : ${this.forecastDetails.weather[0].description}`;
+      } else {
+        return "Current weather unvailable";
+      }
     },
   },
   methods: {
@@ -106,10 +114,6 @@ export default {
   margin-top: 15px;
 }
 
-.modal-enter,
-.modal-leave {
-  opacity: 0;
-}
 button {
   font-family: Poppins;
   padding: 0.5rem 2rem;
@@ -121,11 +125,5 @@ button {
   font-weight: bold;
   margin: 10px;
   height: 3rem;
-}
-
-.modal-enter .modal-container,
-.modal-leave .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
 }
 </style>

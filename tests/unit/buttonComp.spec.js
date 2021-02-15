@@ -12,7 +12,7 @@ describe("ButtonComp.vue", () => {
   });
   it("setted props value should be the button text", () => {
     const buttonText = ButtonWrapper.find(".vlk-btn");
-    expect(ButtonWrapper.find(".vlk-btn").isEmpty()).toBe(false);
+    // expect(ButtonWrapper.find(".vlk-btn").isEmpty()).toBe(false);
     expect(buttonText.text()).toBe("Test Button");
   });
 });
