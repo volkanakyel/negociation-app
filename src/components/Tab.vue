@@ -17,6 +17,11 @@ export default {
       isActive: false,
     };
   },
+  watch: {
+    selected() {
+      this.isActive = this.selected;
+    },
+  },
   mounted() {
     this.isActive = this.selected;
   },

@@ -1,7 +1,11 @@
 <template>
   <div class="tab-wrapper">
     <Tabs>
-      <Tab name="employer tab" :selected="true" :disable="disableEmployerTab">
+      <Tab
+        name="employer tab"
+        :selected="!disableEmployerTab"
+        :disable="disableEmployerTab"
+      >
         <h2>Enter Maximum offer</h2>
         <InputComp inputName="Maximum offer" v-model="employerOffer" />
         <ButtonComp
@@ -10,15 +14,15 @@
         />
         <Notification
           v-if="missingOffer"
-          notifMessage="You can swith to the employee Tab"
+          notifMessage="You did not enter any offers"
         />
       </Tab>
-      <Tab name="employee tab">
+      <Tab name="employee tab" :selected="disableEmployerTab">
         <h2>Enter Maximum salary</h2>
         <InputComp inputName="Salary expectation" v-model="employeeSalary" />
         <ButtonComp buttonName="Submit salary" @buttonEvent="openModal" />
         <Modal
-          v-if="!showNotification"
+          v-if="!employeeNotification"
           :success="validOffer"
           :show="showModal"
           @closeModal="closeModal()"
@@ -26,8 +30,8 @@
           :employeeSalary="employeeSalary"
         />
         <Notification
-          v-if="showNotification"
-          notifMessage="Employer Tab is not filled"
+          v-if="employeeNotification"
+          notifMessage="There is no offer yet"
         />
       </Tab>
     </Tabs>
@@ -56,7 +60,7 @@ export default {
       employerOffer: 0,
       employeeSalary: 0,
       showModal: false,
-      showNotification: false,
+      employeeNotification: false,
       disableEmployerTab: false,
       missingOffer: false,
     };
@@ -72,8 +76,8 @@ export default {
     openModal() {
       if (this.employerOffer > 0) {
         this.showModal = true;
-        this.showNotification = false;
-      } else this.showNotification = true;
+        this.employeeNotification = false;
+      } else this.employeeNotification = true;
     },
     closeModal() {
       this.showModal = false;
@@ -82,6 +86,7 @@ export default {
       if (this.employerOffer) {
         this.disableEmployerTab = true;
         this.missingOffer = false;
+        this.employeeNotification = false;
       } else {
         this.missingOffer = true;
       }
