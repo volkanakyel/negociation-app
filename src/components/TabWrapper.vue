@@ -1,121 +1,149 @@
 <template>
-  <div class="tab-wrapper">
-    <Tabs>
-      <Tab
-        name="employer tab"
-        :selected="!disableEmployerTab"
-        :disable="disableEmployerTab"
-      >
-        <h2>Enter Maximum offer</h2>
-        <InputComp
-          id="offerEmployer"
-          inputName="Maximum offer"
-          v-model="employerOffer"
-        />
-        <ButtonComp
-          id="submitOffer"
-          buttonName="Submit offer"
-          @buttonEvent="closeEmployerPanel()"
-        />
-        <Notification
-          v-if="missingOffer"
-          notifMessage="You did not enter any offers"
-        />
+  <div class="card">
+    <Tabs v-model="activeTab">
+      <Tab name="employer" label="Employer" :disabled="disableEmployerTab">
+        <div class="form-section">
+          <div class="form-header">
+            <div class="step-badge">Step 1</div>
+            <h2>Maximum Offer</h2>
+            <p>Enter the highest amount you're willing to offer.</p>
+          </div>
+          <InputComp
+            id="offerEmployer"
+            inputName="Enter offer amount"
+            v-model="employerOffer"
+          />
+          <ButtonComp
+            id="submitOffer"
+            buttonName="Continue"
+            @buttonEvent="closeEmployerPanel"
+          />
+          <Notification
+            v-if="missingOffer"
+            notifMessage="Please enter an offer amount to continue"
+          />
+        </div>
       </Tab>
-      <Tab name="employee tab" :selected="disableEmployerTab">
-        <h2>Enter Maximum salary</h2>
-        <InputComp
-          id="employeeSalary"
-          inputName="Salary expectation"
-          v-model="employeeSalary"
-        />
-        <ButtonComp
-          id="submitSalary"
-          buttonName="Submit salary"
-          @buttonEvent="openModal"
-        />
-        <Modal
-          id="modal"
-          v-if="!employeeNotification"
-          :success="validOffer"
-          :show="showModal"
-          @closeModal="closeModal()"
-          :employerOffer="employerOffer"
-          :employeeSalary="employeeSalary"
-        />
-        <Notification
-          v-if="employeeNotification"
-          notifMessage="There is no offer yet"
-        />
+      <Tab name="employee" label="Employee" :disabled="!disableEmployerTab && activeTab !== 'employee'">
+        <div class="form-section">
+          <div class="form-header">
+            <div class="step-badge">Step 2</div>
+            <h2>Minimum Salary</h2>
+            <p>Enter the minimum salary you'd accept.</p>
+          </div>
+          <InputComp
+            id="employeeSalary"
+            inputName="Enter salary expectation"
+            v-model="employeeSalary"
+          />
+          <ButtonComp
+            id="submitSalary"
+            buttonName="See Results"
+            @buttonEvent="openModal"
+          />
+          <Modal
+            v-if="showModal"
+            :success="validOffer"
+            :employerOffer="employerOffer"
+            :employeeSalary="employeeSalary"
+            @close="closeModal"
+          />
+          <Notification
+            v-if="employeeNotification"
+            notifMessage="Please complete step 1 first"
+          />
+        </div>
       </Tab>
     </Tabs>
   </div>
 </template>
 
-<script>
-import Tab from "@/components/Tab";
-import Notification from "@/components/Notification";
-import Tabs from "@/components/Tabs";
-import ButtonComp from "@/components/ButtonComp";
-import InputComp from "@/components/InputComp";
-import Modal from "@/components/Modal";
-export default {
-  name: "tab-wrapper",
-  components: {
-    Tab,
-    Tabs,
-    ButtonComp,
-    InputComp,
-    Modal,
-    Notification,
-  },
-  data() {
-    return {
-      employerOffer: 0,
-      employeeSalary: 0,
-      showModal: false,
-      employeeNotification: false,
-      disableEmployerTab: false,
-      missingOffer: false,
-    };
-  },
-  computed: {
-    validOffer() {
-      return this.employerOffer
-        ? this.employerOffer >= this.employeeSalary
-        : false;
-    },
-  },
-  methods: {
-    openModal() {
-      if (this.employerOffer > 0) {
-        this.showModal = true;
-        this.employeeNotification = false;
-      } else this.employeeNotification = true;
-    },
-    closeModal() {
-      this.showModal = false;
-    },
-    closeEmployerPanel() {
-      if (this.employerOffer) {
-        this.disableEmployerTab = true;
-        this.missingOffer = false;
-        this.employeeNotification = false;
-      } else {
-        this.missingOffer = true;
-      }
-    },
-  },
-};
+<script setup>
+import { ref, computed } from 'vue'
+import Tab from '@/components/Tab.vue'
+import Notification from '@/components/Notification.vue'
+import Tabs from '@/components/Tabs.vue'
+import ButtonComp from '@/components/ButtonComp.vue'
+import InputComp from '@/components/InputComp.vue'
+import Modal from '@/components/Modal.vue'
+
+const employerOffer = ref(0)
+const employeeSalary = ref(0)
+const showModal = ref(false)
+const employeeNotification = ref(false)
+const disableEmployerTab = ref(false)
+const missingOffer = ref(false)
+const activeTab = ref('employer')
+
+const validOffer = computed(() => {
+  return employerOffer.value ? employerOffer.value >= employeeSalary.value : false
+})
+
+const openModal = () => {
+  if (employerOffer.value > 0) {
+    showModal.value = true
+    employeeNotification.value = false
+  } else {
+    employeeNotification.value = true
+  }
+}
+
+const closeModal = () => {
+  showModal.value = false
+}
+
+const closeEmployerPanel = () => {
+  if (employerOffer.value) {
+    disableEmployerTab.value = true
+    missingOffer.value = false
+    employeeNotification.value = false
+    activeTab.value = 'employee'
+  } else {
+    missingOffer.value = true
+  }
+}
 </script>
 
 <style scoped>
-.tab-wrapper {
-  font-family: poppins;
-  margin: 0 auto;
-  background: #ffffff;
-  padding: 1.5em;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 8px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 5px;
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.form-section {
+  padding: 28px 32px 32px;
+}
+
+.form-header {
+  margin-bottom: 24px;
+}
+
+.step-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+
+.form-header p {
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 </style>
