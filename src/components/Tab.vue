@@ -4,26 +4,39 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "tab",
-  props: {
-    name: { required: true },
-    selected: { default: false },
-    disable: { default: false },
+<script setup>
+import { inject, computed, onMounted, onUnmounted } from 'vue'
+
+const props = defineProps({
+  name: {
+    type: String,
+    required: true
   },
-  data: () => {
-    return {
-      isActive: false,
-    };
+  label: {
+    type: String,
+    required: true
   },
-  watch: {
-    selected() {
-      this.isActive = this.selected;
-    },
-  },
-  mounted() {
-    this.isActive = this.selected;
-  },
-};
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const registerTab = inject('registerTab')
+const unregisterTab = inject('unregisterTab')
+const activeTab = inject('activeTab')
+
+const isActive = computed(() => activeTab() === props.name)
+
+onMounted(() => {
+  registerTab({
+    name: props.name,
+    label: props.label,
+    disabled: props.disabled
+  })
+})
+
+onUnmounted(() => {
+  unregisterTab(props.name)
+})
 </script>

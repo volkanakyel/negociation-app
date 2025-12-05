@@ -1,40 +1,63 @@
 <template>
-  <div>
-    <button @click="buttonEvent()" class="vlk-btn">{{ buttonName }}</button>
-  </div>
+  <button @click="buttonEvent" class="btn">
+    {{ buttonName }}
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
 </template>
 
-<script>
-export default {
-  name: "button-comp",
-  props: {
-    buttonName: {
-      required: true,
-      default: "Submit",
-      type: String,
-    },
-  },
-  methods: {
-    buttonEvent() {
-      this.$emit("buttonEvent");
-    },
-  },
-};
+<script setup>
+defineProps({
+  buttonName: {
+    type: String,
+    required: true,
+    default: 'Submit'
+  }
+})
+
+const emit = defineEmits(['buttonEvent'])
+
+const buttonEvent = () => {
+  emit('buttonEvent')
+}
 </script>
 
 <style scoped>
-.vlk-btn {
-  font-family: Poppins;
-  padding: 0.5rem 2rem;
-  background: white;
-  border: 1px solid #46b424;
-  color: #46b424;
+.btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  border-radius: 15px;
-  font-size: 16px;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
-  font-weight: bold;
-  margin: 10px;
-  height: 3rem;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: #1557b0;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn svg {
+  transition: transform 0.2s ease;
+}
+
+.btn:hover svg {
+  transform: translateX(2px);
 }
 </style>

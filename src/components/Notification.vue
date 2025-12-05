@@ -1,43 +1,58 @@
 <template>
-  <div class="notice warning">
-    <i class="fas fa-exclamation-circle fa-2x"></i>
-    <p>
-      {{ notifMessage }}
-    </p>
+  <div class="notice">
+    <div class="notice-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 5V8.5M8 11V11.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p>{{ notifMessage }}</p>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    notifMessage: {
-      type: String,
-      default: "Warning Notification",
-    },
-  },
-};
+<script setup>
+defineProps({
+  notifMessage: {
+    type: String,
+    default: 'Notification'
+  }
+})
 </script>
 
 <style scoped>
 .notice {
   display: flex;
-  font-family: poppins;
-  position: relative;
-  margin: 1em;
-  background: #f9f9f9;
-  padding: 1em 1em 1em 2em;
-  border-left: 10px solid #ddd;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
-  border-radius: 5px;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--error-light);
+  border: 1px solid #f5c6cb;
+  border-radius: var(--radius-sm);
+  animation: slideIn 0.2s ease;
 }
 
-.warning {
-  border-color: #ffdc00;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-i {
-  color: #ffdc00;
-  margin: 10px;
+
+.notice-icon {
+  flex-shrink: 0;
+  color: var(--error);
+  margin-top: 1px;
+}
+
+p {
+  font-size: 13px;
+  color: #721c24;
+  margin: 0;
+  line-height: 1.4;
 }
 </style>
