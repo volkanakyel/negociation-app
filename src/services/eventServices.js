@@ -1,19 +1,24 @@
-import axios from "axios";
+import axios from 'axios'
 
-const apiURL =
-  "http://api.openweathermap.org/data/2.5/weather?q=london&appid=1e8cba1df4964a8fe57ecb6de357abbc";
+const API_URL = 'https://api.openweathermap.org/data/2.5/weather'
+const API_KEY = '1e8cba1df4964a8fe57ecb6de357abbc'
 
 const apiForecast = axios.create({
-  baseURL: apiURL,
-  withCredentials: false,
+  baseURL: API_URL,
+  timeout: 10000,
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-});
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+})
 
 export default {
   getForecast() {
-    return apiForecast.get();
-  },
-};
+    return apiForecast.get('', {
+      params: {
+        q: 'london',
+        appid: API_KEY
+      }
+    })
+  }
+}
